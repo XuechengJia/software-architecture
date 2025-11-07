@@ -53,4 +53,12 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { register, login };
+const validate = async (req, res) => {
+    try {
+        res.json({ valid: true, user: req.user })
+    } catch (err) {
+        res.status(401).json({ valid: false, message: 'token 无效' })
+    }
+};
+
+module.exports = { register, login , validate};

@@ -3,6 +3,14 @@ const pool = require('../config/db');
 
 const startRide = async (userId, vehicleId) => {
     const client = await pool.connect();
+    // 检查用户是否已有进行中骑行
+    const ongoing = await client.query(
+        `SELECT id FROM rides WHERE user_id = $1 AND status = 'ONGOING'`,
+        [userId]
+    );
+    if (ongoing.rows.length > 0) {
+        throw new Error('您已有一辆车正在使用中');
+    }
     try {
         await client.query('BEGIN');
 

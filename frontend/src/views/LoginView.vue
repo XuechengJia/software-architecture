@@ -65,16 +65,21 @@ const rules = {
   password: [{ required: true, message: '请输入密码' }, { min: 6, message: '密码至少6位' }]
 }
 
-const login = () => {
+const login = async () => {
   formRef.value.validate(async valid => {
     if (!valid) return
     loading.value = true
     try {
       const { data } = await axios.post('/api/auth/login', form)
+
+      // 关键：保存 token 和 user
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
+
       ElMessage.success('登录成功！')
-      router.push('/home')
+
+      // 强制跳转
+      router.push('/home').catch(() => {})  // 防止重复跳转报错
     } catch (e) {
       ElMessage.error(e.response?.data?.message || '登录失败')
     } finally {
