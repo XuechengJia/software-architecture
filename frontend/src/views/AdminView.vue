@@ -133,7 +133,7 @@
                 <el-table-column prop="description" label="说明" />
                 <el-table-column label="照片" width="100">
                   <template #default="scope">
-                    <img v-if="scope.row.photoUrl" :src="scope.row.photoUrl" alt="投诉照片" style="width:60px;height:60px;object-fit:cover;border-radius:6px;" />
+                    <img v-if="scope.row.photoUrl" :src="getFullUrl(scope.row.photoUrl)" alt="投诉照片" style="width:60px;height:60px;object-fit:cover;border-radius:6px;" />
                   </template>
                 </el-table-column>
                 <el-table-column label="位置" width="160">
@@ -141,10 +141,16 @@
                     <span>经度: {{ scope.row.longitude }}<br/>纬度: {{ scope.row.latitude }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column prop="status" label="状态" width="100" />
+                <el-table-column prop="status" label="状态" width="100">
+                  <template #default="scope">
+                    <el-tag :type="scope.row.status === '未处理' ? 'danger' : 'success'">
+                      {{ scope.row.status }}
+                    </el-tag>
+                  </template>
+                </el-table-column>
                 <el-table-column label="操作" width="120">
                   <template #default="scope">
-                    <el-button v-if="scope.row.status==='未处理'" type="primary" size="small" @click="handleComplaint(scope.row.id)">处理</el-button>
+                    <el-button v-if="scope.row.status==='未处理'" type="primary" size="small" @click="handleComplaintItem(scope.row.id)">处理</el-button>
                     <span v-else>已处理</span>
                   </template>
                 </el-table-column>
@@ -168,9 +174,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { getFullUrl } from '../utils/url'
+import { fetchComplaints, handleComplaint } from '../utils/complaints'
 import {
   Setting,
   DataBoard,
@@ -206,26 +213,28 @@ const roleTag = {
 onMounted(() => {
   const u = localStorage.getItem('user')
   if (u) user.value = JSON.parse(u)
-  fetchComplaints()
+  fetchComplaintsList()
 })
 
-const fetchComplaints = async () => {
+const fetchComplaintsList = async () => {
   loadingComplaints.value = true
   try {
-    const res = await axios.get('/api/complaints')
-    complaints.value = res.data
+    complaints.value = await fetchComplaints()
   } catch (e) {
     ElMessage.error('投诉列表获取失败')
   }
   loadingComplaints.value = false
 }
 
-const handleComplaint = async (id) => {
+const handleComplaintItem = async (id) => {
   try {
-    
-    await axios.post(`/api/complaints/${id}/handle`)
+    await handleComplaint(id)
+    // 立即更新本地状态
+    const complaint = complaints.value.find(c => c.id === id)
+    if (complaint) {
+      complaint.status = '已处理'
+    }
     ElMessage.success('投诉已处理')
-    fetchComplaints()
   } catch (e) {
     ElMessage.error('处理失败')
   }
