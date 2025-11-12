@@ -20,9 +20,27 @@ const routes = [
     {
         path: '/admin',
         name: 'Admin',
-        component: () => import('../views/AdminView.vue'),
-        meta: { requiresAuth: true, roles: ['OPERATOR', 'MAINTAINER', 'PARK_ADMIN'] }
+        // 直接重定向到基于角色的子页面（在 beforeEnter 中读取 localStorage）
+        beforeEnter: (to, from, next) => {
+            try {
+                const userStr = localStorage.getItem('user')
+                const user = userStr ? JSON.parse(userStr) : {}
+                if (user && user.role) {
+                    if (user.role === 'OPERATOR') return next('/admin/operator')
+                    if (user.role === 'MAINTAINER') return next('/admin/maintainer')
+                    if (user.role === 'PARK_ADMIN') return next('/admin/park_admin')
+                }
+            } catch (e) {
+                // ignore and fallback
+            }
+            // 无法识别角色则回到登录页
+            next('/login')
+        }
     }
+    ,
+    { path: '/admin/operator', component: () => import('../views/OperatorView.vue'), meta: { requiresAuth: true, roles: ['OPERATOR'] } },
+    { path: '/admin/maintainer', component: () => import('../views/MaintainerView.vue'), meta: { requiresAuth: true, roles: ['MAINTAINER'] } },
+    { path: '/admin/park_admin', component: () => import('../views/ParkAdminView.vue'), meta: { requiresAuth: true, roles: ['PARK_ADMIN'] } }
 ]
 
 const router = createRouter({
