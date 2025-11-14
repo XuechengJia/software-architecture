@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import HomeView from '../views/HomeView.vue'
+import MaintainerManageView from '../views/MaintainerManageView.vue'
+
 import axios from 'axios'
 
 const routes = [
@@ -40,7 +42,15 @@ const routes = [
     ,
     { path: '/admin/operator', component: () => import('../views/OperatorView.vue'), meta: { requiresAuth: true, roles: ['OPERATOR'] } },
     { path: '/admin/maintainer', component: () => import('../views/MaintainerView.vue'), meta: { requiresAuth: true, roles: ['MAINTAINER'] } },
-    { path: '/admin/park_admin', component: () => import('../views/ParkAdminView.vue'), meta: { requiresAuth: true, roles: ['PARK_ADMIN'] } }
+    { path: '/admin/park_admin', component: () => import('../views/ParkAdminView.vue'), meta: { requiresAuth: true, roles: ['PARK_ADMIN'] } },
+    {
+        path: '/admin/maintainers',
+        name: 'MaintainerManage',
+        component: MaintainerManageView,
+        meta: {
+            requiresAuth: true,
+            role: 'PARK_ADMIN'
+        }}
 ]
 
 const router = createRouter({

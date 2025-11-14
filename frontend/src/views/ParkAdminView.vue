@@ -1,5 +1,15 @@
 <!-- src/views/ParkAdminView.vue -->
 <template>
+  <div class="admin-page">
+    <!-- 人员管理按钮（从园区管理页跳转） -->
+    <div style="margin-bottom: 12px; text-align: right;">
+      <router-link to="/admin/maintainers">
+        <el-button type="primary">
+          人员管理
+        </el-button>
+      </router-link>
+    </div>
+  </div>
   <div class="admin-container">
     <div class="background-wrapper"><div class="bg-animation"></div></div>
     <div class="admin-content">

@@ -73,6 +73,17 @@ CREATE TABLE public.complaints (
     handled_at timestamp without time zone,
     handler character varying(64)
 );
+CREATE TABLE public.complaint_tasks (
+                                        id              serial PRIMARY KEY,
+                                        complaint_id    integer NOT NULL REFERENCES public.complaints(id) ON DELETE CASCADE,
+                                        maintainer_id   integer NOT NULL REFERENCES public.users(id) ON DELETE RESTRICT,
+                                        status          character varying(16) NOT NULL DEFAULT '待处理',
+                                        result_text     text,
+                                        result_photo_url character varying(255),
+                                        result_location public.geometry(Point,4326),
+                                        created_at      timestamp without time zone DEFAULT now(),
+                                        completed_at    timestamp without time zone
+);
 
 
 --

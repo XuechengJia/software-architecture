@@ -7,6 +7,19 @@ router.get('/tenants', controller.getTenants);
 router.get('/active-users', controller.getActiveUsers);
 router.get('/popular-routes', controller.getPopularRoutes);
 router.get('/peak-hours', controller.getPeakHours);
+// 维护员管理
 router.get('/maintainers', controller.getMaintainers);
+router.patch('/maintainers/:id/status', controller.updateMaintainerStatus);
+router.get('/maintainers/:id/parks', controller.getMaintainerParks);
+router.put('/maintainers/:id/parks', controller.setMaintainerParks);
+// 园区列表（管理员视角）
+router.get('/parks', controller.getAllParksForAdmin);
 
+// 运营账号管理
+router.get('/operators', controller.getOperators);
+router.patch('/operators/:id/status', controller.updateOperatorStatus);
+
+// 租客账号管理
+router.get('/tenants-accounts', controller.getTenantAccounts);
+router.patch('/tenants-accounts/:id/status', controller.updateTenantStatus);
 module.exports = router;

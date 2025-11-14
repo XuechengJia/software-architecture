@@ -13,12 +13,13 @@ const getAllParks = async () => {
             boundary_coordinates,
             created_at
         FROM parks
+        ORDER BY id
     `);
     return res.rows;
 };
 
-// 根据管理员ID获取管理的园区
-const getParksByManagerId = async (userId) => {
+// 通过 user_parks 关系表获取某个用户绑定的园区
+const getParksByUserId = async (userId) => {
     const res = await pool.query(`
         SELECT
             p.id,
@@ -29,25 +30,36 @@ const getParksByManagerId = async (userId) => {
             p.boundary_coordinates,
             p.created_at
         FROM parks p
-                 INNER JOIN user_parks up ON p.id = up.park_id
+                 JOIN user_parks up ON up.park_id = p.id
         WHERE up.user_id = $1
+        ORDER BY p.id
     `, [userId]);
     return res.rows;
 };
 
-// 获取用户有权限访问的园区
+/**
+ * 根据当前登录用户的角色和 ID 获取可见的园区列表
+ *
+ * - TENANT（租客）：可以在同一运营方所有园区通用，这里直接返回全部园区
+ * - PARK_ADMIN / OPERATOR / MAINTAINER：按 user_parks 绑定的园区过滤
+ */
 const getParksByUser = async (userId, userRole) => {
-    if (userRole === 'ADMIN') {
-        return await getAllParks();
-    } else if (userRole === 'MANAGER') {
-        return await getParksByManagerId(userId);
-    } else {
+    if (!userId || !userRole) {
+        return [];
+    }
+
+    if (userRole === 'TENANT') {
+        // 租客可以在多个园区通用：这里返回全部园区
         return await getAllParks();
     }
+
+    // 其他后台角色按绑定园区过滤
+    const parks = await getParksByUserId(userId);
+    return parks;
 };
 
 module.exports = {
     getAllParks,
-    getParksByManagerId,
-    getParksByUser
+    getParksByUserId,
+    getParksByUser,
 };
