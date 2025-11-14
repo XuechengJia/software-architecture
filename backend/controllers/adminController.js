@@ -254,6 +254,73 @@ const updateTenantStatus = async (req, res) => {
         res.status(500).json({ message: '更新租客账号状态失败' });
     }
 };
+// 创建园区
+const createPark = async (req, res) => {
+    try {
+        const { name, location, centerLng, centerLat, boundaryCoordinates } = req.body;
+
+        if (!name) {
+            return res.status(400).json({ message: '园区名称必填' });
+        }
+
+        const park = await parkModel.createPark({
+            name,
+            location: location || '',
+            centerLng: centerLng ? Number(centerLng) : null,
+            centerLat: centerLat ? Number(centerLat) : null,
+            boundaryCoordinates: boundaryCoordinates || ''
+        });
+
+        res.status(201).json(park);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: '创建园区失败' });
+    }
+};
+
+// 更新园区
+const updatePark = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, location, centerLng, centerLat, boundaryCoordinates } = req.body;
+
+        if (!name) {
+            return res.status(400).json({ message: '园区名称必填' });
+        }
+
+        const park = await parkModel.updatePark(Number(id), {
+            name,
+            location: location || '',
+            centerLng: centerLng ? Number(centerLng) : null,
+            centerLat: centerLat ? Number(centerLat) : null,
+            boundaryCoordinates: boundaryCoordinates || ''
+        });
+
+        if (!park) {
+            return res.status(404).json({ message: '园区不存在' });
+        }
+
+        res.json(park);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: '更新园区失败' });
+    }
+};
+
+// 删除园区
+const deletePark = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const ok = await parkModel.deletePark(Number(id));
+        if (!ok) {
+            return res.status(404).json({ message: '园区不存在' });
+        }
+        res.json({ message: '园区已删除' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: '删除园区失败' });
+    }
+};
 
 
 module.exports = {
@@ -270,5 +337,8 @@ module.exports = {
     updateOperatorStatus,
     getTenantAccounts,
     updateTenantStatus,
+    createPark,
+    updatePark,
+    deletePark,
 };
 

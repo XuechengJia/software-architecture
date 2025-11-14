@@ -8,6 +8,8 @@ const complaintRouter = require('./routes/complaint');
 const parkRouter = require('./routes/parks');
 const adminRouter = require('./routes/admin');
 const complaintTaskRouter = require('./routes/complaintTasks');
+const adminParkFenceRouter = require('./routes/adminParkFences');
+
 
 
 dotenv.config();
@@ -24,6 +26,7 @@ app.use('/api/vehicles', vehicleRouter);
 app.use('/api/ride', rideRouter);
 app.use('/api/complaints', complaintRouter);
 app.use('/api/complaint-tasks', complaintTaskRouter);
+app.use('/api/admin/park-fences', adminParkFenceRouter);
 
 app.use('/api/parks', parkRouter);
 app.use('/api/admin', adminRouter);

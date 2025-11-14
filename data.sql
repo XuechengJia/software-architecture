@@ -84,6 +84,14 @@ CREATE TABLE public.complaint_tasks (
                                         created_at      timestamp without time zone DEFAULT now(),
                                         completed_at    timestamp without time zone
 );
+CREATE TABLE public.park_fences (
+                                    id              serial PRIMARY KEY,
+                                    park_id         integer NOT NULL REFERENCES public.parks(id) ON DELETE CASCADE,
+                                    fence_type      character varying(32) NOT NULL,  -- 比如：RIDE（骑行范围）、PARKING（停车区）
+                                    name            character varying(64) NOT NULL,
+                                    coordinates     text,                            -- 暂时用文本存边界坐标（如 JSON 或 "lng,lat;lng,lat"）
+                                    created_at      timestamp without time zone DEFAULT now()
+);
 
 
 --

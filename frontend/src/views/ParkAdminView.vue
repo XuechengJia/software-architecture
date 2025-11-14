@@ -3,8 +3,13 @@
   <div class="admin-page">
     <!-- 人员管理按钮（从园区管理页跳转） -->
     <div style="margin-bottom: 12px; text-align: right;">
+      <router-link to="/admin/parks-manage">
+        <el-button type="primary" style="margin-right: 8px;">
+          园区管理
+        </el-button>
+      </router-link>
       <router-link to="/admin/maintainers">
-        <el-button type="primary">
+        <el-button>
           人员管理
         </el-button>
       </router-link>

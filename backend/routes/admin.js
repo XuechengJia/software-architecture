@@ -14,7 +14,9 @@ router.get('/maintainers/:id/parks', controller.getMaintainerParks);
 router.put('/maintainers/:id/parks', controller.setMaintainerParks);
 // 园区列表（管理员视角）
 router.get('/parks', controller.getAllParksForAdmin);
-
+router.post('/parks', controller.createPark);
+router.put('/parks/:id', controller.updatePark);
+router.delete('/parks/:id', controller.deletePark);
 // 运营账号管理
 router.get('/operators', controller.getOperators);
 router.patch('/operators/:id/status', controller.updateOperatorStatus);
