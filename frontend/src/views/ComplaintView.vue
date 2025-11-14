@@ -59,6 +59,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'ComplaintView',
   data() {
@@ -85,15 +87,15 @@ export default {
     },
     getLocation() {
       navigator.geolocation.getCurrentPosition(
-        pos => {
-          this.location = {
-            latitude: pos.coords.latitude.toFixed(6),
-            longitude: pos.coords.longitude.toFixed(6)
+          pos => {
+            this.location = {
+              latitude: pos.coords.latitude.toFixed(6),
+              longitude: pos.coords.longitude.toFixed(6)
+            }
+          },
+          () => {
+            this.errorMsg = '无法获取位置信息，请检查定位权限'
           }
-        },
-        () => {
-          this.errorMsg = '无法获取位置信息，请检查定位权限'
-        }
       )
     },
     clearLocation() {
@@ -108,10 +110,37 @@ export default {
       this.successMsg = ''
       this.errorMsg = ''
 
-      setTimeout(() => {
+      try {
+        const formData = new FormData()
+        formData.append('type', this.type)
+        formData.append('description', this.description)
+        formData.append('latitude', this.location.latitude)
+        formData.append('longitude', this.location.longitude)
+
+        const fileInput = this.$refs.fileInput
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          formData.append('photo', fileInput.files[0])
+        }
+
+        const res = await axios.post('/api/complaints', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        })
+
+        this.successMsg = res.data?.message || '投诉已提交，感谢您的反馈！'
+
+        // 清空表单
+        this.type = ''
+        this.description = ''
+        this.location = null
+        this.photoPreview = null
+        if (fileInput) {
+          fileInput.value = ''
+        }
+      } catch (err) {
+        this.errorMsg = err.response?.data?.message || '投诉提交失败，请稍后重试'
+      } finally {
         this.isSubmitting = false
-        this.successMsg = '投诉已提交，感谢您的反馈！'
-      }, 1500)
+      }
     },
     cancel() {
       this.$router.push('/')
@@ -119,6 +148,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 /* 整体布局 */

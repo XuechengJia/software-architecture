@@ -7,5 +7,6 @@ router.get('/tenants', controller.getTenants);
 router.get('/active-users', controller.getActiveUsers);
 router.get('/popular-routes', controller.getPopularRoutes);
 router.get('/peak-hours', controller.getPeakHours);
+router.get('/maintainers', controller.getMaintainers);
 
 module.exports = router;

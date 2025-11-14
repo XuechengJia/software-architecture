@@ -74,5 +74,18 @@ const getPeakHours = async (req, res) => {
     res.status(500).json({ message: '获取高峰时段失败' });
   }
 };
+// 获取维护员列表（供运营指派任务用）
+const getMaintainers = async (req, res) => {
+  try {
+    const result = await pool.query(
+        "SELECT id, name, phone FROM users WHERE role = 'MAINTAINER' AND status = 'ACTIVE' ORDER BY name"
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: '获取维护员失败' });
+  }
+};
 
-module.exports = { getTenants, getActiveUsers, getPopularRoutes, getPeakHours };
+
+module.exports = { getTenants, getActiveUsers, getPopularRoutes, getPeakHours, getMaintainers };
