@@ -9,6 +9,7 @@
             <el-icon class="admin-icon"><Setting /></el-icon>
             <span class="header-title">运营后台</span>
           </div>
+
           <div class="header-right">
             <div class="user-info">
               <el-avatar :size="36" :icon="UserFilled" class="user-avatar" />
@@ -17,6 +18,18 @@
                 <el-tag :type="roleTag[user.role]" effect="light" size="small">{{ roleMap[user.role] }}</el-tag>
               </div>
             </div>
+            <!-- 车辆运维管理入口 -->
+            <div style="margin: 12px 0; text-align: right;">
+              <router-link to="/admin/operator/vehicles">
+                <el-button type="primary">
+                  车辆运维管理
+                </el-button>
+              </router-link>
+
+            </div>
+            <el-button type="primary" @click="$router.push('/chat')">
+              进入群聊
+            </el-button>
             <el-button type="danger" plain @click="logout" class="logout-btn">
               <el-icon><SwitchButton /></el-icon>
               <span>退出登录</span>
@@ -26,14 +39,6 @@
       </el-affix>
 
       <div class="main-content">
-        <!-- 车辆运维管理入口 -->
-        <div style="margin: 12px 0; text-align: right;">
-          <router-link to="/admin/operator/vehicles">
-            <el-button type="primary">
-              车辆运维管理
-            </el-button>
-          </router-link>
-        </div>
         <el-card class="content-card" shadow="hover">
           <template #header>
             <div class="content-header">

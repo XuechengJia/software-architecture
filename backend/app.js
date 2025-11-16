@@ -10,6 +10,8 @@ const adminRouter = require('./routes/admin');
 const complaintTaskRouter = require('./routes/complaintTasks');
 const adminParkFenceRouter = require('./routes/adminParkFences');
 const adminVehicleRouter = require('./routes/adminVehicles');
+const messageRoutes = require('./routes/messages');
+
 
 
 
@@ -34,7 +36,7 @@ app.use('/api/admin/vehicles', adminVehicleRouter);
 app.use('/api/parks', parkRouter);
 app.use('/api/admin', adminRouter);
 app.use('/uploads', express.static(require('path').join(__dirname, 'public/uploads')));
-
+app.use('/api/messages', messageRoutes);
 // 404
 app.use((req, res) => {
   res.status(404).json({ message: '接口不存在' });

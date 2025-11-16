@@ -8,6 +8,7 @@
             <el-icon class="admin-icon"><Setting /></el-icon>
             <span class="header-title">车辆运维管理</span>
           </div>
+
           <div class="header-right">
             <div class="user-info">
               <el-avatar :size="36" :icon="UserFilled" class="user-avatar" />

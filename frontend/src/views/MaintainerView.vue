@@ -9,6 +9,7 @@
             <el-icon class="admin-icon"><Setting /></el-icon>
             <span class="header-title">维护后台</span>
           </div>
+
           <div class="header-right">
             <div class="user-info">
               <el-avatar :size="36" :icon="UserFilled" class="user-avatar" />
@@ -17,6 +18,9 @@
                 <el-tag :type="roleTag[user.role]" effect="light" size="small">{{ roleMap[user.role] }}</el-tag>
               </div>
             </div>
+            <el-button type="primary" @click="$router.push('/chat')">
+            进入群聊
+            </el-button>
             <el-button type="danger" plain @click="logout" class="logout-btn">
               <el-icon><SwitchButton /></el-icon>
               <span>退出登录</span>

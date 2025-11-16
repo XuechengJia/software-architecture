@@ -4,7 +4,7 @@ import RegisterView from '../views/RegisterView.vue'
 import HomeView from '../views/HomeView.vue'
 import MaintainerManageView from '../views/MaintainerManageView.vue'
 import ParkManageView from '../views/ParkManageView.vue'
-
+import GroupChatView from '../views/GroupChatView.vue'
 
 import axios from 'axios'
 
@@ -53,6 +53,7 @@ const routes = [
         component: ParkManageView,
         meta: { requiresAuth: true, role: 'PARK_ADMIN' }
     },
+    { path: '/chat', name: 'GroupChat', component: GroupChatView },
 
     {
         path: '/admin/maintainers',
